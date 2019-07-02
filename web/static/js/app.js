@@ -11,9 +11,7 @@
 //
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
-import "phoenix_html"
-import {Socket, Presence} from "phoenix"
-let user = document.getElementById("user").innerText
+
 
 // Import local files
 //
@@ -21,3 +19,50 @@ let user = document.getElementById("user").innerText
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
+
+import "phoenix_html"
+import {Socket, Presence} from "phoenix"
+
+let user = document.getElementById("user").innerText
+let socket = new Socket("/socket", {params:{user: user}})
+socket.connect()
+
+let presences = {}
+
+let formated_timestamp = (ts) => {
+    let date = new Date(ts)
+    return date.toLocaleString()
+}
+
+let user_time_list = (user, {metas: metas}) => {
+    return {
+        user: user,
+        online_at: formated_timestamp(metas[0].online_at)
+    }
+}
+
+let user_list = document.getElementById("userList")
+let render = (presences) => {
+    user_list.innerHTML = Presence.list(presences, user_time_list)
+    .map(presence => `
+        <li>
+            ${presence.user}
+            <br>
+            <small>online since ${presence.online_at}</small>
+        </li>
+    `)
+    .join("")
+}
+
+let room = socket.channel("room:lobby")
+room.on("presence_state", state => {
+    presences = Presence.syncState(presences, state)
+    render(presences)
+})
+
+room.on("presence_diff", diff => {
+    presences = Presence.syncDiff(presences, diff)
+    render(presences)
+})
+
+room.join()
