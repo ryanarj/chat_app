@@ -13,8 +13,10 @@
                         'Elixir.ChatApp.PageView','Elixir.ChatApp.Presence',
                         'Elixir.ChatApp.Repo','Elixir.ChatApp.RoomChannel',
                         'Elixir.ChatApp.Router',
-                        'Elixir.ChatApp.Router.Helpers',
-                        'Elixir.ChatApp.UserSocket','Elixir.ChatApp.Web']},
+                        'Elixir.ChatApp.Router.Helpers','Elixir.ChatApp.User',
+                        'Elixir.ChatApp.UserController',
+                        'Elixir.ChatApp.UserSocket','Elixir.ChatApp.UserView',
+                        'Elixir.ChatApp.Web']},
               {registered,[]},
               {vsn,"0.0.1"},
               {mod,{'Elixir.ChatApp',[]}}]}.
